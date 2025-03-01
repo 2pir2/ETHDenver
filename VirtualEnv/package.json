@@ -1,0 +1,19 @@
+{
+  "name": "viem-project",
+  "version": "1.0.0",
+  "description": "A Viem project for Ethereum smart contract interaction",
+  "type": "module",
+  "main": "viem.js",
+  "scripts": {
+    "start": "node viem.js"
+  },
+  "dependencies": {
+    "viem": "^1.21.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "hardhat": "^2.22.19"
+  }
+}
