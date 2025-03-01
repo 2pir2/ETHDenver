@@ -1,45 +1,39 @@
-# Ignore private keys & secret files
-.env
-.env.local
-.env.development
-.env.production
-secrets.json
-*.key
-*.pem
-*.p12
-*.cert
-
-# Ignore Hardhat & Viem-related artifacts
-artifacts/
-cache/
+# Dependencies
 node_modules/
+.pnpm-store/
 
-# Ignore log files
+# Build output
+dist/
+build/
+
+# Environment variables
+Eigenlayer/.env
+Eigenlayer/.env.example
+.env.local
+.env.*.local
+
+# Logs
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Ignore build files
-dist/
-out/
-
-# Ignore system-specific files
-.DS_Store
-Thumbs.db
-
-# Ignore VS Code settings
+# Editor directories and files
+.idea/
 .vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Ignore compiled binary files
-*.bin
-*.exe
-*.out
-*.o
-
-# Ignore Hardhat console history
-.history
-
-# Ignore package-lock if using yarn
-package-lock.json
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 
