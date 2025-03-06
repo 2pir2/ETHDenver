@@ -4,7 +4,7 @@ import { sepolia } from 'viem/chains'
 import fs from 'fs'
 
 // ✅ Load Contract ABI & Bytecode
-const contractJsonPath = "/Users/hanxu/Desktop/ETHDenver/VirtualEnv/artifacts/contracts/printasset.sol/PrintAsset.json"
+const contractJsonPath = "/Users/hanxu/Desktop/ETHDenver/VirtualEnv/artifacts/contracts/result.sol/AssetManager.json"
 const contractJson = JSON.parse(fs.readFileSync(contractJsonPath, 'utf8'))
 
 const contractAbi = contractJson.abi
@@ -28,35 +28,54 @@ const publicClient = createPublicClient({
     transport: webSocket("wss://sepolia.drpc.org")
 })
 
-// ✅ Function to Deploy Contract & Capture Logs
-async function deployContract() {
+// ✅ Function to Deploy Contract and Interact
+async function deployAndInteract() {
     console.log("🚀 Deploying contract...")
 
-    const hash = await walletClient.sendTransaction({
-        account,
-        data: contractBytecode, // ✅ Bytecode for deployment
+    // ✅ Deploy Contract
+    const hash = await walletClient.deployContract({
+        abi: contractAbi,
+        bytecode: contractBytecode,
     })
 
     console.log("📜 Deployment Transaction Hash:", hash)
 
-    // ✅ Wait for transaction confirmation
+    // ✅ Wait for contract to be deployed
     const receipt = await publicClient.waitForTransactionReceipt({ hash })
+    const contractAddress = receipt.contractAddress
 
-    console.log("✅ Contract Deployed at:", receipt.contractAddress)
+    console.log("✅ Contract Deployed at:", contractAddress)
+
+    // ✅ Interact with Contract (Call addAsset)
+    console.log("📌 Creating an asset on deployed contract...")
+
+    const createAssetHash = await walletClient.writeContract({
+        address: contractAddress,
+        abi: contractAbi,
+        functionName: "addAsset",
+        args: ["This is a test description"], // ✅ Fix: Only passing `description`
+    })
+
+    console.log("📜 Asset Creation Transaction Hash:", createAssetHash)
+
+    // ✅ Wait for transaction confirmation
+    const assetReceipt = await publicClient.waitForTransactionReceipt({ hash: createAssetHash })
+
+    console.log("✅ Asset Created")
 
     // ✅ Extract logs from events
-    for (const log of receipt.logs) {
+    for (const log of assetReceipt.logs) {
         console.log("📜 Event Log:", log)
     }
 
     // ✅ Save logs for ZK-SNARK proof
     fs.writeFileSync(
         "deployment_logs.json",
-        JSON.stringify(receipt.logs, (key, value) =>
+        JSON.stringify(assetReceipt.logs, (key, value) =>
           typeof value === "bigint" ? value.toString() : value, // Convert BigInt to String
         null, 2)
-      )
-      
+    )
+    console.log("Log Saved!")
 }
 
-deployContract().catch(console.error)
+deployAndInteract().catch(console.error)

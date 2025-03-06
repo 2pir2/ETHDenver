@@ -59,9 +59,30 @@ export class Agent {
       console.log('Generating text with prompt:', prompt);
       // Generate text with proof using Opacity
       const result = await this.opacity.generateText(prompt);
-
+      
       console.log('Generated result:', result);
-  
+
+// ✅ Extract Solidity contract from response
+const solidityMatch = result.content.match(/```([\s\S]*?)```/);
+
+if (!solidityMatch || solidityMatch.length < 2) {
+    console.error('❌ No Solidity contract found in the generated response.');
+} else {
+    let solidityCode = solidityMatch[1].trim(); // Remove whitespace
+
+    // ✅ If first line is "solidity", remove it
+    const lines = solidityCode.split("\n");
+    if (lines[0].trim().toLowerCase() === "solidity") {
+        solidityCode = lines.slice(1).join("\n"); // Skip the first line
+    }
+
+    // ✅ Save extracted Solidity code to a file
+    const fileName = "result.sol";
+    fs.writeFileSync(fileName, solidityCode);
+
+    console.log(`✅ Solidity smart contract saved as: ${fileName}`);
+
+}
       // // Convert the result to an array of lines
       // let lines = result["content"].split("\n");
   

@@ -65,7 +65,7 @@ The Express server provides the following endpoints:
    ```bash
    curl -X POST http://localhost:3000/api/generate \
      -H "Content-Type: application/json" \
-     -d '{"prompt": "What is the capital of France?"}'
+     -d '{"prompt": "Create a solidity code that check my asset. Emit relevant informations"}'
    ```
 
 3. **Health Check**

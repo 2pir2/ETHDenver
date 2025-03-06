@@ -83,7 +83,7 @@ func main() {
 	logEntry := logs[0]                                        // ✅ Use the first log entry
 	contract := logEntry["address"].(string)                   // Contract Address (Hex)
 	txHash := logEntry["transactionHash"].(string)             // Deployment Transaction Hash (Hex)
-	deployer := logEntry["topics"].([]interface{})[1].(string) // Deployer Address (Hex)
+	deployer := logEntry["topics"].([]interface{})[0].(string) // Deployer Address (Hex)
 
 	// ✅ Convert Hex String → frontend.Variable
 	deployerNum := stringToVariable(deployer)
